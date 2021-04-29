@@ -14,3 +14,13 @@ class tourSerializer(serializers.ModelSerializer):
         obj.createdAt = timezone.now()
         obj.save()
         return obj
+
+    def update(self, instance, validated_data):
+        created_at = instance.createdAt
+
+        obj = super().update(instance, validated_data)
+
+        obj.createdAt = created_at
+        obj.updatedAt = timezone.now()
+        obj.save()
+        return obj
