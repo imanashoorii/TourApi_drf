@@ -62,3 +62,13 @@ def editTour(request, pk):
     elif request.method == "DELETE":
         tour.delete()
         return Response( {'message': 'Tour Deleted!'}, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def searchTour(request):
+    tour = Tour.objects.filter(name=request.query_params['name'])
+
+    if tour:
+        ser = tourSerializer(tour, many=True)
+        return Response(ser.data, status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response({'error': 'Not Found!'}, status=status.HTTP_404_NOT_FOUND)
