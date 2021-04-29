@@ -1,0 +1,6 @@
+venv/
+app/__pycache__
+app/migrations
+core/__pycache__
+tour_app/__pycache__
+tour_app/migrations/
