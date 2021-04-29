@@ -4,6 +4,5 @@ app/migrations
 core/__pycache__
 tour_app/__pycache__
 tour_app/migrations/
-
-db.sqlite3
+db*
 db.sqlite3
