@@ -1,8 +1,10 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework import status
 from rest_framework import viewsets
-from .serializers import tourSerializer
+from django.contrib.auth.models import User
+from .serializers import tourSerializer, UserSerializer
 
 from .models import Tour
 
@@ -40,12 +42,13 @@ class ListTourView(viewsets.ModelViewSet):
         return tourSerializer
         
     queryset = Tour.objects.all()
-    http_method_name = ['GET']
+    http_method_name = ['GET', 'POST']
 
     search_fields = ('name', )
     ordering_fields = '__all__'
 
 @api_view(['GET', 'POST', 'DELETE'])
+@permission_classes((IsAdminUser, ))
 def editTour(request, pk):
     
     try:
@@ -83,3 +86,22 @@ def searchTour(request):
         return Response(ser.data, status=status.HTTP_202_ACCEPTED)
     else:
         return Response({'error': 'Not Found!'}, status=status.HTTP_404_NOT_FOUND)
+
+class CreateUserView(viewsets.ModelViewSet):
+    def get_serializer_class(self):
+        return UserSerializer
+
+    permission_classes = (AllowAny,)
+
+    queryset = User.objects.all()
+    http_method_name = ['POST']
+
+# @api_view(['POST'])
+# @permission_classes((AllowAny, ))
+# def createUser(request):
+#     ser = UserSerializer(data=request.data)
+#     if ser.is_valid():
+#         ser.save()
+#         return Response(ser.data, status=status.HTTP_201_CREATED)
+#     else:
+#         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
