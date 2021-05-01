@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-
+from rest_framework import viewsets
 from .serializers import tourSerializer
 
 from .models import Tour
@@ -28,11 +28,22 @@ def createTour(request):
     else:
         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
-def listTour(request):
-    tours = Tour.objects.all()
-    ser = tourSerializer(tours, many=True)
-    return Response(ser.data, status=status.HTTP_200_OK)
+# @api_view(['GET'])
+# def listTour(request):
+#     tours = Tour.objects.all()
+#     ser = tourSerializer(tours, many=True)
+#     return Response(ser.data, status=status.HTTP_200_OK)
+
+# ClassBased View for AllTours
+class ListTourView(viewsets.ModelViewSet):
+    def get_serializer_class(self):
+        return tourSerializer
+        
+    queryset = Tour.objects.all()
+    http_method_name = ['GET']
+
+    search_fields = ('name', )
+    ordering_fields = '__all__'
 
 @api_view(['GET', 'POST', 'DELETE'])
 def editTour(request, pk):
