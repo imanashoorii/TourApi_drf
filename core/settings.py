@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -128,12 +130,16 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
+RENDERER = ('rest_framework.renderers.JSONRenderer', )
+if DEBUG:
+    RENDERER += ('rest_framework.renderers.BrowsableAPIRenderer', )
+
 REST_FRAMEWORK = {
 
     # Dissable Django Rest Browsable API
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'rest_framework.renderers.JSONRenderer',
-    # ),
+    'DEFAULT_RENDERER_CLASSES': RENDERER,
 
     # Authentication
     'DEFAULT_AUTHENTICATION_CLASSES': (
